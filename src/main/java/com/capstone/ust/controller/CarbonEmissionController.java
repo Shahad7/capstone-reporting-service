@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,8 @@ public class CarbonEmissionController {
 	@Autowired
 	private Helper helper;
 
+
+
 //	for testing purpose only
 	@GetMapping
 	public Iterable<CarbonEmission> getAll(){
@@ -44,40 +47,19 @@ public class CarbonEmissionController {
 		return carbonEmissionService.save(carbonEmission);
 		
 	}
-	
-	
+
 	@PutMapping("/{emission_id}")
 	public CarbonEmission updateRecord(@PathVariable String emission_id,@RequestBody HashMap<String,Object> map) {
-		CarbonEmission record = carbonEmissionService.findById(emission_id);
-		for(Map.Entry<String,Object> entry: map.entrySet()) {
-			try {
-				helper.setProperty(record,entry.getKey(),entry.getValue());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return carbonEmissionService.save(record);
+
+		return carbonEmissionService.updateRecord(emission_id,map);
 	}
-	
+
 	@PutMapping("/{emission_id}/{category}")
 	public CarbonEmission updateCategory(@PathVariable String emission_id,@PathVariable String category,@RequestBody HashMap<String,Object> map) {
-		
-		CarbonEmission record = carbonEmissionService.findById(emission_id);
-		Field categoryField = null;
-		try {
-			categoryField = record.getClass().getDeclaredField(category);
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		}
-		categoryField.setAccessible(true);
-		
-			
-		return null;
+
+		return carbonEmissionService.updateSpecificCategory(emission_id,category,map);
 	}
-	
+
 	
 	@DeleteMapping("/{emission_id}")
 	public String delete(@PathVariable String emission_id) {
@@ -87,4 +69,55 @@ public class CarbonEmissionController {
 			return "no such record";
 		
 	}
-} 
+}
+
+
+
+
+
+
+
+
+
+
+//	@PutMapping("/{emission_id}/{category}")
+//	public CarbonEmission updateCategory(@PathVariable String emission_id,@PathVariable String category,@RequestBody HashMap<String,Object> map) {
+//
+//		CarbonEmission record = carbonEmissionService.findById(emission_id);
+//		Field categoryField = null;
+//		try {
+//			categoryField = record.getClass().getDeclaredField(category);
+//
+//		} catch (NoSuchFieldException e) {
+//			e.printStackTrace();
+//		} catch (SecurityException e) {
+//			e.printStackTrace();
+//		}
+//		categoryField.setAccessible(true);
+//		Map<String,Object> nestedMap = map.get(category) instanceof Map ? (Map)map.get(category) : null;
+//		for(Map.Entry<String,Object> entry: nestedMap.entrySet()) {
+//			try {
+//				helper.setProperty(record.getClass().getDeclaredField(category).getType().cast(categoryField),entry.getKey(),entry.getValue());
+//
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		return carbonEmissionService.save(record);
+//	}
+
+//	@PutMapping("/{emission_id}")
+//	public CarbonEmission updateRecord(@PathVariable String emission_id,@RequestBody HashMap<String,Object> map) {
+//		CarbonEmission record = carbonEmissionService.findById(emission_id);
+//		for(Map.Entry<String,Object> entry: map.entrySet()) {
+//			try {
+//				helper.setProperty(record,entry.getKey(),entry.getValue());
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//		return carbonEmissionService.save(record);
+//	}
