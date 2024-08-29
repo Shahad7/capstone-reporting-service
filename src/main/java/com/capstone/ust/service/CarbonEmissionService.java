@@ -102,7 +102,7 @@ public class CarbonEmissionService {
 			@SuppressWarnings("unchecked")
 			Map<String,Object> innerMap = (Map<String, Object>) map.get(category);
 			innerMap.forEach((key,value)->{
-				update.set(category.concat(".").concat(key),value);
+				update.inc(category.concat(".").concat(key),(Number) value);
 			});
 			template.updateFirst(query(where("_id").is(emission_id)), update, CarbonEmission.class);
 			return template.findById(emission_id, CarbonEmission.class);

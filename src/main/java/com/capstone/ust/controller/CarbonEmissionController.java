@@ -73,7 +73,7 @@ public class CarbonEmissionController {
 	
 	/*****************CALCULATION ENDPOINTS********************************************************************/
 	@GetMapping("/{emission_id}/calculate")
-	public ResponseEntity<CarbonEmission> calculateAll(@PathVariable String emission_id){	
+	public ResponseEntity<?> calculateAll(@PathVariable String emission_id){	
 		return ResponseEntity.ok(carbonEmissionService.calculateAll(emission_id));
 	}
 	
