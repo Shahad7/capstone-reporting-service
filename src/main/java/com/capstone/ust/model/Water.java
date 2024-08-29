@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Water {
+public class Water extends Category{
 
 	private double litres_used;
 	private double emission;

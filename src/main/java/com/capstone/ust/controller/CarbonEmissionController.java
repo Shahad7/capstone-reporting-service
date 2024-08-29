@@ -1,11 +1,9 @@
 package com.capstone.ust.controller;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone.ust.entity.CarbonEmission;
+import com.capstone.ust.exception.NoRecordsFoundForUserException;
+import com.capstone.ust.exception.RecordNotFoundException;
 import com.capstone.ust.service.CarbonEmissionService;
-import com.capstone.ust.utils.Helper;
 
 @RestController
 @RequestMapping("/api/v1/emissions")
@@ -26,49 +25,64 @@ public class CarbonEmissionController {
 	@Autowired
 	private CarbonEmissionService carbonEmissionService;
 	
-	@Autowired
-	private Helper helper;
 
-
-
-//	for testing purpose only
+	/********for testing purpose only******/
 	@GetMapping
-	public Iterable<CarbonEmission> getAll(){
-		return carbonEmissionService.getRecords();
+	public ResponseEntity<Iterable<CarbonEmission>> getAll(){
+		return ResponseEntity.ok(carbonEmissionService.getRecords());
 	}
 	
 	@GetMapping("/{user_id}")
-	public Iterable<CarbonEmission> getUserRecords(@PathVariable String user_id){
-		return carbonEmissionService.getUserRecords(user_id);
+	public ResponseEntity<Iterable<CarbonEmission>> getUserRecords(@PathVariable String user_id) throws NoRecordsFoundForUserException{
+		return ResponseEntity.ok(carbonEmissionService.getUserRecords(user_id));
 	}
 	
 	@PostMapping
-	public CarbonEmission createRecord(@RequestBody CarbonEmission carbonEmission) {
-		return carbonEmissionService.save(carbonEmission);
+	public  ResponseEntity<CarbonEmission> createRecord(@RequestBody CarbonEmission carbonEmission) {
+		
+		return ResponseEntity.status(201).body(carbonEmissionService.save(carbonEmission));
 		
 	}
 
 	@PutMapping("/{emission_id}")
-	public CarbonEmission updateRecord(@PathVariable String emission_id,@RequestBody HashMap<String,Object> map) {
+	public ResponseEntity<CarbonEmission> updateRecord(@PathVariable String emission_id,@RequestBody HashMap<String,Object> map) throws RecordNotFoundException {
 
-		return carbonEmissionService.updateRecord(emission_id,map);
+		return ResponseEntity.status(200).body(carbonEmissionService.updateRecord(emission_id,map));
 	}
 
-	@PutMapping("/{emission_id}/{category}")
-	public CarbonEmission updateCategory(@PathVariable String emission_id,@PathVariable String category,@RequestBody HashMap<String,Object> map) {
+//	for normally updating nested category fields
+	@PutMapping("/{emission_id}/update/{category}")
+	public ResponseEntity<CarbonEmission> updateCategory(@PathVariable String emission_id,@PathVariable String category,@RequestBody HashMap<String,Object> map) throws RecordNotFoundException {
 
-		return carbonEmissionService.updateSpecificCategory(emission_id,category,map);
+		return ResponseEntity.ok(carbonEmissionService.updateSpecificCategory(emission_id,category,map));
+	}
+	
+	//for when user keeps adding consumption details, fields should be cumulatively updated
+	@PutMapping("/{emission_id}/cumulate/{category}")
+	public ResponseEntity<CarbonEmission> cumulativeUpdateCategory(@PathVariable String emission_id,@PathVariable String category,@RequestBody HashMap<String,Object> map) throws RecordNotFoundException {
+
+		return ResponseEntity.ok(carbonEmissionService.cumulativeUpdateSpecificCategory(emission_id,category,map));
 	}
 
 	
 	@DeleteMapping("/{emission_id}")
-	public String delete(@PathVariable String emission_id) {
-		if(carbonEmissionService.delete(emission_id))
-			return "successfully deleted";
-		else
-			return "no such record";
-		
+	public ResponseEntity<String> delete(@PathVariable String emission_id) throws RecordNotFoundException {
+			return ResponseEntity.ok(carbonEmissionService.delete(emission_id));
+			
 	}
+	
+	/*****************CALCULATION ENDPOINTS********************************************************************/
+	@GetMapping("/{emission_id}/calculate")
+	public ResponseEntity<CarbonEmission> calculateAll(@PathVariable String emission_id){	
+		return ResponseEntity.ok(carbonEmissionService.calculateAll(emission_id));
+	}
+	
+	@GetMapping("/{emission_id}/calculate/{category}")
+	public ResponseEntity<?> calculateAll(@PathVariable String emission_id,@PathVariable String category){	
+		return ResponseEntity.ok(carbonEmissionService.calculateForSpecificCategory(emission_id,category));
+	}
+	
+	
 }
 
 
@@ -76,48 +90,3 @@ public class CarbonEmissionController {
 
 
 
-
-
-
-
-//	@PutMapping("/{emission_id}/{category}")
-//	public CarbonEmission updateCategory(@PathVariable String emission_id,@PathVariable String category,@RequestBody HashMap<String,Object> map) {
-//
-//		CarbonEmission record = carbonEmissionService.findById(emission_id);
-//		Field categoryField = null;
-//		try {
-//			categoryField = record.getClass().getDeclaredField(category);
-//
-//		} catch (NoSuchFieldException e) {
-//			e.printStackTrace();
-//		} catch (SecurityException e) {
-//			e.printStackTrace();
-//		}
-//		categoryField.setAccessible(true);
-//		Map<String,Object> nestedMap = map.get(category) instanceof Map ? (Map)map.get(category) : null;
-//		for(Map.Entry<String,Object> entry: nestedMap.entrySet()) {
-//			try {
-//				helper.setProperty(record.getClass().getDeclaredField(category).getType().cast(categoryField),entry.getKey(),entry.getValue());
-//
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//
-//		return carbonEmissionService.save(record);
-//	}
-
-//	@PutMapping("/{emission_id}")
-//	public CarbonEmission updateRecord(@PathVariable String emission_id,@RequestBody HashMap<String,Object> map) {
-//		CarbonEmission record = carbonEmissionService.findById(emission_id);
-//		for(Map.Entry<String,Object> entry: map.entrySet()) {
-//			try {
-//				helper.setProperty(record,entry.getKey(),entry.getValue());
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//		return carbonEmissionService.save(record);
-//	}

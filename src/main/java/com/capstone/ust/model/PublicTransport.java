@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Travel {
+public class PublicTransport {
 	
-	private double public_transport;
-	private double private_transport;
+	private double flight_km;
+	private double bus_km;
+	private double train_km;
 	private double emission;
 }

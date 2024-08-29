@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FuelSources {
+public class FuelSources extends Category {
 
 	private double lpg;
 	private double firewood;

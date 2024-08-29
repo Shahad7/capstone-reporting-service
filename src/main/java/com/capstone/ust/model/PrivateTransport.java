@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DietaryHabits extends Category{
-	private double meat_consumption;
-	private double dairy_cosumption;
-	private double other_consumpotion;
+public class PrivateTransport {
+
+	private double fuel_used;
 	private double emission;
+	
 }

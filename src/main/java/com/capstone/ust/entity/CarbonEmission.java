@@ -6,7 +6,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.capstone.ust.model.DietaryHabits;
 import com.capstone.ust.model.Electricity;
 import com.capstone.ust.model.FuelSources;
-import com.capstone.ust.model.Travel;
+import com.capstone.ust.model.PrivateTransport;
+import com.capstone.ust.model.PublicTransport;
 import com.capstone.ust.model.Waste;
 import com.capstone.ust.model.Water;
 
@@ -25,11 +26,12 @@ public class CarbonEmission {
 	private String id;
 	private String userID;
 	private String date;
-	private Travel travel;
+	private PublicTransport public_transport;
+	private PrivateTransport private_transport;
 	private Water water;
-	private DietaryHabits dietaryHabits;
+	private DietaryHabits dietary_habits;
 	private Waste waste;
-	private FuelSources fuelSources;
+	private FuelSources fuel_sources;
 	private Electricity electricity;
 	
 }

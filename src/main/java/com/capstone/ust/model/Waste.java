@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Waste {
+public class Waste extends Category{
 
 	private double recyclable_waste;
 	private double non_recyclable_waste;
