@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PublicTransport {
+public class PublicTransport extends  Category{
 	
 	private double flight_km;
 	private double bus_km;

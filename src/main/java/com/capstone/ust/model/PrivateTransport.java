@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PrivateTransport {
+public class PrivateTransport extends Category{
 
 	private double distance;
 	private double emission;

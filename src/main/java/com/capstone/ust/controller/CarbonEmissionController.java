@@ -2,6 +2,7 @@ package com.capstone.ust.controller;
 
 import java.util.HashMap;
 
+import com.capstone.ust.exception.CurrentMonthRecordAlreadyExists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,9 +37,14 @@ public class CarbonEmissionController {
 	public ResponseEntity<Iterable<CarbonEmission>> getUserRecords(@PathVariable String user_id) throws NoRecordsFoundForUserException{
 		return ResponseEntity.ok(carbonEmissionService.getUserRecords(user_id));
 	}
-	
+
+	//method to get user's emission record only for a specific month
+	@GetMapping("/{user_id}/{month}")
+    public ResponseEntity<CarbonEmission> getUserRecordByDate(@PathVariable String user_id,@PathVariable String date) throws RecordNotFoundException{
+        return ResponseEntity.ok(carbonEmissionService.getUserRecordByDate(user_id,date));
+    }
 	@PostMapping
-	public  ResponseEntity<CarbonEmission> createRecord(@RequestBody CarbonEmission carbonEmission) {
+	public  ResponseEntity<CarbonEmission> createRecord(@RequestBody CarbonEmission carbonEmission) throws CurrentMonthRecordAlreadyExists {
 		
 		return ResponseEntity.status(201).body(carbonEmissionService.save(carbonEmission));
 		
@@ -70,17 +76,9 @@ public class CarbonEmissionController {
 			return ResponseEntity.ok(carbonEmissionService.delete(emission_id));
 			
 	}
-	
-	/*****************CALCULATION ENDPOINTS********************************************************************/
-	@GetMapping("/{emission_id}/calculate")
-	public ResponseEntity<?> calculateAll(@PathVariable String emission_id){	
-		return ResponseEntity.ok(carbonEmissionService.calculateAll(emission_id));
-	}
-	
-	@GetMapping("/{emission_id}/calculate/{category}")
-	public ResponseEntity<?> calculateAll(@PathVariable String emission_id,@PathVariable String category){	
-		return ResponseEntity.ok(carbonEmissionService.calculateForSpecificCategory(emission_id,category));
-	}
+
+
+
 	
 	
 }

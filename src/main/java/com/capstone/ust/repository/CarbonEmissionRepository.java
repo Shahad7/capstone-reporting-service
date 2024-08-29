@@ -9,4 +9,7 @@ import com.capstone.ust.entity.CarbonEmission;
 public interface CarbonEmissionRepository extends CrudRepository<CarbonEmission, String>{
 	
 	Iterable<CarbonEmission> findByUserID(String userID);
+
+
+    CarbonEmission findByUserIDAndDate(String userId, String date);
 }
