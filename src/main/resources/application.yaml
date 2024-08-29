@@ -6,7 +6,7 @@ spring:
     uri: mongodb+srv://shahad7:qahe7LhbAc84JQfs@cluster0.ytovchg.mongodb.net/capstone?retryWrites=true&w=majority&appName=Cluster0
    
 server:
- port: 8081
+ port: 5003
 
  
 

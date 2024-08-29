@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PrivateTransport {
 
-	private double fuel_used;
+	private double distance;
 	private double emission;
 	
 }
