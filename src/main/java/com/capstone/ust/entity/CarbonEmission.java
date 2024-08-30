@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 
 
 @Document
-@NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class CarbonEmission {
@@ -39,5 +38,16 @@ public class CarbonEmission {
 	private Waste waste;
 	private FuelSources fuel_sources;
 	private Electricity electricity;
+
+	public CarbonEmission() {
+        super();
+		this.public_transport = new PublicTransport();
+		this.private_transport = new PrivateTransport();
+		this.water = new Water();
+		this.dietary_habits = new DietaryHabits();
+		this.waste = new Waste();
+		this.fuel_sources = new FuelSources();
+		this.electricity = new Electricity();
+    }
 	
 }
