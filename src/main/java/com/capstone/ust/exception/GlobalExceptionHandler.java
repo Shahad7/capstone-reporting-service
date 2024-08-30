@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> GeneralException(Exception ex){
-		return ResponseEntity.status(404).body(ex.getMessage());
+		return ResponseEntity.status(404).body(ex);
 	}
 
 
