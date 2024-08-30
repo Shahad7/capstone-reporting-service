@@ -2,9 +2,11 @@ package com.capstone.ust.controller;
 
 import java.util.HashMap;
 
-import com.capstone.ust.exception.CurrentMonthRecordAlreadyExists;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone.ust.entity.CarbonEmission;
+import com.capstone.ust.exception.CurrentMonthRecordAlreadyExists;
 import com.capstone.ust.exception.NoRecordsFoundForUserException;
 import com.capstone.ust.exception.RecordNotFoundException;
 import com.capstone.ust.service.CarbonEmissionService;
 
 @RestController
+@Validated
 @RequestMapping("/api/v1/emissions")
 public class CarbonEmissionController {
 	
@@ -44,7 +48,7 @@ public class CarbonEmissionController {
         return ResponseEntity.ok(carbonEmissionService.getUserRecordByDate(user_id,date));
     }
 	@PostMapping
-	public  ResponseEntity<CarbonEmission> createRecord(@RequestBody CarbonEmission carbonEmission) throws CurrentMonthRecordAlreadyExists {
+	public  ResponseEntity<CarbonEmission> createRecord(@Valid @RequestBody CarbonEmission carbonEmission) throws CurrentMonthRecordAlreadyExists {
 		
 		return ResponseEntity.status(201).body(carbonEmissionService.save(carbonEmission));
 		
