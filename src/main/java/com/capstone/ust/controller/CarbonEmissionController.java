@@ -51,8 +51,8 @@ public class CarbonEmissionController {
 	}
 
 	//method to get user's emission record only for a specific month
-	@GetMapping("/{user_id}/{month}")
-    public ResponseEntity<CarbonEmission> getUserRecordByDate(@PathVariable String user_id,@PathVariable String date) throws RecordNotFoundException{
+	@GetMapping("/{user_id}/{date}")
+    public ResponseEntity<?> getUserRecordByDate(@PathVariable String user_id,@PathVariable String date) throws RecordNotFoundException{
         return ResponseEntity.ok(carbonEmissionService.getUserRecordByDate(user_id,date));
     }
 	@PostMapping
@@ -79,7 +79,6 @@ public class CarbonEmissionController {
 	//for when user keeps adding consumption details, fields should be cumulatively updated
 	@PutMapping("/{emission_id}/cumulate/{category}")
 	public ResponseEntity<CarbonEmission> cumulativeUpdateCategory(@PathVariable String emission_id,@PathVariable String category,@RequestBody HashMap<String,Object> map) throws RecordNotFoundException {
-
 		return ResponseEntity.ok(carbonEmissionService.cumulativeUpdateSpecificCategory(emission_id,category,map));
 	}
 
