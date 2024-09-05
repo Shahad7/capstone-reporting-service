@@ -55,8 +55,10 @@ public class CarbonEmissionService {
 			throw new NoRecordsFoundForUserException("No emission records found for the requested user");
 	}
 
-	public CarbonEmission getUserRecordByDate(String userId, String date) {
-		return carbonEmissionRepository.findByUserIDAndDate(userId, date);
+	public CarbonEmission getUserRecordByDate(String userId, String date) throws NoRecordsFoundForUserException {
+		if(carbonEmissionRepository.existsByUserIDAndDate(userId,date))
+			return carbonEmissionRepository.findByUserIDAndDate(userId, date);
+		throw new NoRecordsFoundForUserException("No emission records found for the requested user in given date");
 	}
 	
 	

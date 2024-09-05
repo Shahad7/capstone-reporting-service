@@ -52,7 +52,7 @@ public class CarbonEmissionController {
 
 	//method to get user's emission record only for a specific month
 	@GetMapping("/{user_id}/{date}")
-    public ResponseEntity<?> getUserRecordByDate(@PathVariable String user_id,@PathVariable String date) throws RecordNotFoundException{
+    public ResponseEntity<?> getUserRecordByDate(@PathVariable String user_id,@PathVariable String date) throws RecordNotFoundException, NoRecordsFoundForUserException{
         return ResponseEntity.ok(carbonEmissionService.getUserRecordByDate(user_id,date));
     }
 	@PostMapping

@@ -12,4 +12,7 @@ public interface CarbonEmissionRepository extends CrudRepository<CarbonEmission,
 
 
     CarbonEmission findByUserIDAndDate(String userId, String date);
+
+
+	boolean existsByUserIDAndDate(String userId, String date);
 }
